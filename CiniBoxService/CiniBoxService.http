@@ -1,0 +1,6 @@
+@CiniBoxService_HostAddress = http://localhost:5190
+
+GET {{CiniBoxService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
