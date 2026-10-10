@@ -1,6 +1,7 @@
 using CiniBoxService.Service;
 using Microsoft.AspNetCore.Mvc;
 using CiniBoxService.Models;
+using CiniBoxService.Utility;
 
 namespace CiniBoxService.Controllers
 {
@@ -9,10 +10,12 @@ namespace CiniBoxService.Controllers
     {
         private readonly IProfileService _profileService;
         private readonly ILogger<ProfileController> _logger;
-        public ProfileController(IProfileService profileService, ILogger<ProfileController> logger)
+        private readonly Helper _helper;
+        public ProfileController(IProfileService profileService, ILogger<ProfileController> logger, Helper helper)
         {
             _profileService = profileService;
             _logger = logger;
+            _helper = helper;
         }
 
         [HttpGet]
@@ -32,12 +35,12 @@ namespace CiniBoxService.Controllers
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(ErrorResponse(ex.Message));
+                return NotFound(_helper.ErrorResponse(ex.Message));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unable to fetch profile");
-                return StatusCode(StatusCodes.Status500InternalServerError, ErrorResponse("Unable to fetch profile"));
+                return StatusCode(StatusCodes.Status500InternalServerError, _helper.ErrorResponse("Unable to fetch profile"));
             }
         }
 
@@ -58,27 +61,17 @@ namespace CiniBoxService.Controllers
             }
             catch (ArgumentException ex)
             {
-                return BadRequest(ErrorResponse(ex.Message));
+                return BadRequest(_helper.ErrorResponse(ex.Message));
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(ErrorResponse(ex.Message));
+                return NotFound(_helper.ErrorResponse(ex.Message));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unable to update profile");
-                return StatusCode(StatusCodes.Status500InternalServerError, ErrorResponse("Unable to update profile"));
+                return StatusCode(StatusCodes.Status500InternalServerError, _helper.ErrorResponse("Unable to update profile"));
             }
-        }
-
-        private static Response ErrorResponse(string message)
-        {
-            return new Response()
-            {
-                data = null,
-                Message = message,
-                Success = false
-            };
         }
     }
 }

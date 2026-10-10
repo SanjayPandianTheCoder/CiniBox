@@ -5,11 +5,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<ITMDBService, TMDBService>();
 builder.Services.AddScoped<Helper>();
 
 var app = builder.Build();

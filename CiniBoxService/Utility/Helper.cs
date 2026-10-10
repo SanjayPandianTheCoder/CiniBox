@@ -1,3 +1,4 @@
+using CiniBoxService.Models;
 using System.Text.Json;
 
 namespace CiniBoxService.Utility
@@ -5,20 +6,16 @@ namespace CiniBoxService.Utility
     public class Helper
     {
         private readonly ILogger<Helper> _logger;
+        private readonly string _tmbdUrl;
+        private readonly string _tmdbKey;
 
-        public Helper(ILogger<Helper> logger)
+        public Helper(ILogger<Helper> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _tmbdUrl = Convert.ToString(configuration["TMDB:Url"]) ?? "";
+            _tmdbKey = Convert.ToString(configuration["TMDB:ApiKey"]) ?? "";
         }
 
-        /// <summary>
-        /// Reads and deserializes JSON data from the given file.
-        /// </summary>
-        /// <exception cref="ArgumentException">The file path is empty.</exception>
-        /// <exception cref="FileNotFoundException">The file does not exist.</exception>
-        /// <exception cref="InvalidDataException">The file content is empty or not valid JSON for <typeparamref name="T"/>.</exception>
-        /// <exception cref="UnauthorizedAccessException">The file cannot be accessed.</exception>
-        /// <exception cref="IOException">The file could not be read.</exception>
         public async Task<T> GetDataFromPath<T>(string filePath)
         {
             ValidateFilePath(filePath);
@@ -69,15 +66,6 @@ namespace CiniBoxService.Utility
             }
         }
 
-        /// <summary>
-        /// Serializes the data as JSON and overwrites the given file.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">The data is null.</exception>
-        /// <exception cref="ArgumentException">The file path is empty.</exception>
-        /// <exception cref="FileNotFoundException">The file does not exist.</exception>
-        /// <exception cref="InvalidDataException">The data cannot be serialized.</exception>
-        /// <exception cref="UnauthorizedAccessException">The file cannot be accessed.</exception>
-        /// <exception cref="IOException">The file could not be written.</exception>
         public async Task WriteDataToPathAsync<T>(T data, string filePath)
         {
             if (data == null)
@@ -118,6 +106,16 @@ namespace CiniBoxService.Utility
                 _logger.LogError(ex, "I/O error while writing file: {FilePath}", filePath);
                 throw;
             }
+        }
+
+        public Response ErrorResponse(string message)
+        {
+            return new Response()
+            {
+                data = null,
+                Message = message,
+                Success = false
+            };
         }
 
         private static void ValidateFilePath(string filePath)
