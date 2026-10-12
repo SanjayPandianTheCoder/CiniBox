@@ -2,6 +2,7 @@
 using CiniBoxService.Service;
 using CiniBoxService.Utility;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CiniBoxService.Controllers
 {
@@ -75,6 +76,132 @@ namespace CiniBoxService.Controllers
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, _helper.ErrorResponse("Unable to fetch popular movies"));
+            }
+        }
+
+        [HttpGet]
+        [Route("movie/{id}")]
+        public async Task<IActionResult> FetchMovieByID(long id)
+        {
+            try
+            {
+                var data = await _tmdbService.FetchMovieByIdAsync(id);
+
+                return Ok(new Response()
+                {
+                    data = data,
+                    Message = $"Movie: {data.Title} fetched successfully",
+                    Success = true
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, _helper.ErrorResponse("Unable to fetch Movie"));
+            }
+        }
+
+        [HttpGet]
+        [Route("moviecredits/{id}")]
+        public async Task<IActionResult> FetchMovieCreditsById(long id)
+        {
+            try
+            {
+                var data = await _tmdbService.FetchMovieCastAndCrewAsync(id);
+
+                return Ok(new Response()
+                {
+                    data = data,
+                    Message = $"Movie Credits fetched succeessfully",
+                    Success = true
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, _helper.ErrorResponse("Unable to fetch Movie Credits"));
+            }
+        }
+
+        [HttpGet]
+        [Route("movierecommendations/{id}")]
+        public async Task<IActionResult> FetchMovieRecommendationssById(long id)
+        {
+            try
+            {
+                var data = await _tmdbService.FetchMovieRecomendationsOfMovie(id);
+
+                return Ok(new Response()
+                {
+                    data = data,
+                    Message = $"Movie Recommendations fetched succeessfully",
+                    Success = true
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, _helper.ErrorResponse("Unable to fetch Movie Recommendations"));
+            }
+        }
+
+        [HttpGet]
+        [Route("movieimages/{id}")]
+        public async Task<IActionResult> FetchMovieGallery(long id)
+        {
+            try
+            {
+                var data = await _tmdbService.FetchMovieImagesAsync(id);
+
+                return Ok(new Response()
+                {
+                    data = data,
+                    Message = $"Movie Gallery fetched succeessfully",
+                    Success = true
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, _helper.ErrorResponse("Unable to fetch Movie Gallery"));
+            }
+        }
+
+        [HttpGet]
+        [Route("moviereviews/{id}")]
+        public async Task<IActionResult> FetchMovieReviews(long id)
+        {
+            try
+            {
+                var data = await _tmdbService.FetchMovieReviewsAsync(id);
+
+                return Ok(new Response()
+                {
+                    data = data,
+                    Message = $"Movie Reviews fetched succeessfully",
+                    Success = true
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, _helper.ErrorResponse("Unable to fetch Movie Reviews"));
+            }
+        }
+
+        [HttpGet]
+        [Route("detailedmovie/{id}")]
+        public async Task<IActionResult> FetchDetailedMovie(long id)
+        {
+            try
+            {
+                var data = await _tmdbService.FetchDetailedMovieAsync(id);
+
+                return Ok(new Response()
+                {
+                    data = data,
+                    Message = $"Movie fetched succeessfully",
+                    Success = true
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, _helper.ErrorResponse("Unable to fetch Movie"));
             }
         }
     }
