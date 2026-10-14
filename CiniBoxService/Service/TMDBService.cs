@@ -16,6 +16,7 @@ namespace CiniBoxService.Service
         Task<MovieImages> FetchMovieImagesAsync(long id);
         Task<MovieReviews> FetchMovieReviewsAsync(long id);
         Task<DetailedMovie> FetchDetailedMovieAsync(long id);
+        Task<HomeData> GetHomeDataAsync();
     }
 
     public class TMDBService: ITMDBService
@@ -311,6 +312,23 @@ namespace CiniBoxService.Service
 
                 return detailedMovie;
                 
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<HomeData> GetHomeDataAsync()
+        {
+            try
+            {
+                var homeData = new HomeData();
+                homeData.PopularMovies = await FetchPopularMovies() ?? new PagedResult();
+                homeData.NowPlayingMovies = await FetchNowPlaying() ?? new PagedResult();
+                homeData.TopRatedMovies = await FetchTopRatedMovies() ?? new PagedResult();
+
+                return homeData;
             }
             catch (Exception ex)
             {

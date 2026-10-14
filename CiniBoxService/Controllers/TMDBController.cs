@@ -203,6 +203,28 @@ namespace CiniBoxService.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, _helper.ErrorResponse("Unable to fetch Movie"));
             }
+
+        }
+
+        [HttpGet]
+        [Route("homedata")]
+        public async Task<IActionResult> FetchHomeData()
+        {
+            try
+            {
+                var data = await _tmdbService.GetHomeDataAsync();
+
+                return Ok(new Response()
+                {
+                    data = data,
+                    Message = $"Home Data fetched succeessfully",
+                    Success = true
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, _helper.ErrorResponse("Unable to fetch Home Data"));
+            }
         }
     }
 }
