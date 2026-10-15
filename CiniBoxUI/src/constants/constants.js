@@ -1,1 +1,1 @@
-export const baseURL = "https://localhost:7048"
+export const baseURL = "https://cinibox.runasp.net"

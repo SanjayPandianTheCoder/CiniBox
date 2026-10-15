@@ -18,7 +18,7 @@ export default function SeeAllMovies({ route, navigation }) {
   const { width } = useWindowDimensions();
 
   const carouselWidth = width - 32;
-  const carouselHeight = carouselWidth * 0.9;
+  const carouselHeight = carouselWidth * 1.5;
 
   const renderMovie = ({ item }) => (
     <Pressable
@@ -56,7 +56,11 @@ export default function SeeAllMovies({ route, navigation }) {
   const renderFeaturedMovie = ({ item }) => (
     <Pressable
       style={[styles.carouselCard, { width: carouselWidth }]}
-      onPress={() => console.log("Poster path:", item.poster_path)}
+      onPress={() =>
+        navigation.navigate("MovieDetails", {
+          movieId: item.id,
+        })
+      }
     >
       <Image
         source={{

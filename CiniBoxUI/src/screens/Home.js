@@ -55,12 +55,13 @@ export default function Home({ navigation }) {
   const renderMovie = ({ item }) => (
     <Pressable
       style={styles.movieCard}
-      onPress={() => console.log("Movie ID:", item.id)}
+      onPress={() =>
+        navigation.navigate("MovieDetails", {
+          movieId: item.id,
+        })
+      }
     >
-      <FetchedMoviePoster
-        posterPath={item.poster_path}
-        style={styles.poster}
-      />
+      <FetchedMoviePoster posterPath={item.poster_path} style={styles.poster} />
 
       <View style={styles.ratingBadge}>
         <Text style={styles.ratingText}>★ {item.vote_average.toFixed(1)}</Text>
@@ -179,7 +180,11 @@ export default function Home({ navigation }) {
 
                 <Pressable
                   style={styles.exploreButton}
-                  onPress={() => console.log("Selected:", featuredMovie.id)}
+                  onPress={() =>
+                    navigation.navigate("MovieDetails", {
+                      movieId: featuredMovie.id,
+                    })
+                  }
                 >
                   <Text style={styles.buttonText}>Explore Movie →</Text>
                 </Pressable>
