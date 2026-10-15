@@ -226,5 +226,36 @@ namespace CiniBoxService.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, _helper.ErrorResponse("Unable to fetch Home Data"));
             }
         }
+
+        [HttpGet]
+        [Route("search/movie")]
+        public async Task<IActionResult> SearchMovies([FromQuery] string? query, [FromQuery] int page = 1)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return BadRequest(_helper.ErrorResponse("Search query cannot be empty"));
+            }
+
+            if (page < 1)
+            {
+                return BadRequest(_helper.ErrorResponse("Page must be greater than or equal to 1"));
+            }
+
+            try
+            {
+                var data = await _tmdbService.SearchMoviesAsync(query, page);
+
+                return Ok(new Response()
+                {
+                    data = data,
+                    Message = "Search results fetched successfully",
+                    Success = true
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, _helper.ErrorResponse("Unable to search movies"));
+            }
+        }
     }
 }

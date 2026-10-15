@@ -11,3 +11,6 @@ TestResults/
 .env.*
 .DS_Store
 Thumbs.db
+
+# User-uploaded profile pictures
+Data/ProfilePictures/

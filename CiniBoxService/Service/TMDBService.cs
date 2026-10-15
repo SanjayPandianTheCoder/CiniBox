@@ -17,6 +17,7 @@ namespace CiniBoxService.Service
         Task<MovieReviews> FetchMovieReviewsAsync(long id);
         Task<DetailedMovie> FetchDetailedMovieAsync(long id);
         Task<HomeData> GetHomeDataAsync();
+        Task<PagedResult?> SearchMoviesAsync(string query, int page = 1);
     }
 
     public class TMDBService: ITMDBService
@@ -329,6 +330,41 @@ namespace CiniBoxService.Service
                 homeData.TopRatedMovies = await FetchTopRatedMovies() ?? new PagedResult();
 
                 return homeData;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<PagedResult?> SearchMoviesAsync(string query, int page = 1)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(query))
+                {
+                    throw new Exception("Search query cannot be empty.");
+                }
+
+                if (page < 1)
+                {
+                    throw new Exception("Page must be greater than or equal to 1.");
+                }
+
+                var encodedQuery = Uri.EscapeDataString(query.Trim());
+                var requestUrl = $"{_tmbdUrl}/search/movie?api_key={_tmdbKey}&query={encodedQuery}&page={page}&include_adult=false";
+                using (var httpClient = new HttpClient())
+                {
+                    var apiResponse = await httpClient.GetAsync(requestUrl);
+                    var apiResponseString = await apiResponse.Content.ReadAsStringAsync();
+                    if (apiResponse.IsSuccessStatusCode)
+                    {
+                        var searchResults = JsonSerializer.Deserialize<PagedResult>(apiResponseString);
+                        return searchResults;
+                    }
+
+                    throw new Exception(apiResponseString);
+                }
             }
             catch (Exception ex)
             {

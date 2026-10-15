@@ -147,7 +147,7 @@ export default function Home({ navigation }) {
             <Text style={styles.tagline}>YOUR MOVIE UNIVERSE</Text>
           </View>
 
-          <Pressable onPress={() => console.log("Search movies")}>
+          <Pressable onPress={() => navigation.navigate("Search")}>
             <Text style={styles.searchIcon}>⌕</Text>
           </Pressable>
         </View>
